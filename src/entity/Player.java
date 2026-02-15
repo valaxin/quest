@@ -4,7 +4,6 @@ import main.GamePanel;
 import main.KeyHandler;
 
 import java.awt.*;
-import java.lang.reflect.Array;
 
 public class Player extends Entity {
 
@@ -23,10 +22,6 @@ public class Player extends Entity {
         x = 100;
         y = 100;
         speed = 4;
-    }
-
-    public void getCurrentPostion () {
-        return (array)[ this.x, this.y]
     }
 
     public void update () {
