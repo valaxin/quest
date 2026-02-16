@@ -49,10 +49,12 @@ public class Player extends Entity {
             right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/sprites/saturn/right1.png")));
             right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/sprites/saturn/right2.png")));
         } catch (IOException e) {
-            e.printStackTrace(); // todo: more robust logging
+            e.printStackTrace();
         }
     }
 
+    // **
+    // update called each frame
     public void update () {
         if (keyHandler.upPressed) {
             direction = "up";
@@ -68,15 +70,17 @@ public class Player extends Entity {
             x += speed;
         }
 
-        // change image every n frames
-        spriteTick++;
-        if (spriteTick > 24) {
-            if (spriteNumber == 1) {
-                spriteNumber = 2;
-            } else if (spriteNumber == 2) {
-                spriteNumber = 1;
+        if (keyHandler.leftPressed || keyHandler.rightPressed || keyHandler.upPressed || keyHandler.downPressed) {
+            // change image every n frames only when button pressed
+            spriteTick++;
+            if (spriteTick > 15) {
+                if (spriteNumber == 1) {
+                    spriteNumber = 2;
+                } else if (spriteNumber == 2) {
+                    spriteNumber = 1;
+                }
+                spriteTick = 0;
             }
-            spriteTick = 0;
         }
     }
 
@@ -119,6 +123,6 @@ public class Player extends Entity {
                 }
                 break;
         }
-        g.drawImage(image, x, y, null);
+        g.drawImage(image, x, y, gamePanel.tileSize, gamePanel.tileSize, null);
     }
 }
