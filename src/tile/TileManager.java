@@ -16,7 +16,7 @@ public class TileManager {
 
     public TileManager(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
-        tile = new Tile[16];
+        tile = new Tile[10];
         mapTileNum = new int[gamePanel.maxScreenCol][gamePanel.maxScreenRow];
         getTileImage();
         loadMap();
@@ -43,15 +43,14 @@ public class TileManager {
     public void loadMap() {
         try {
             // importing a txt file, reading the content of the txt file
-            InputStream stream = getClass().getResourceAsStream("/resources/maps/map.txt");
-            assert stream != null; //
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            InputStream stream = getClass().getResourceAsStream("/resources/maps/01.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(stream)));
 
             int col = 0;
             int row = 0;
 
             //
-            while (reader.ready() && col < gamePanel.maxScreenCol && row < gamePanel.maxScreenRow) {
+            while (col < gamePanel.maxScreenCol && row < gamePanel.maxScreenRow) {
                 String line = reader.readLine();
 
                 // ..
@@ -81,9 +80,10 @@ public class TileManager {
         int y = 0;
 
         while (col < gamePanel.maxScreenCol &&  row < gamePanel.maxScreenRow) {
+            // todo
+            // int tileNum = mapTileNum[row][col]; // <- borked
 
-            // int tileNum = mapTileNum[row][col];
-            g.drawImage(tile[0].image, x, y, gamePanel.tileSize, gamePanel.tileSize, null);
+            g.drawImage(tile[0].image, x, y, gamePanel.tileSize, gamePanel.tileSize, null); // 0 needs to be replaced with tileNum, but borked
             col++;
             x += gamePanel.tileSize;
 
