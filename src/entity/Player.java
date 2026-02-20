@@ -73,7 +73,7 @@ public class Player extends Entity {
         if (keyHandler.leftPressed || keyHandler.rightPressed || keyHandler.upPressed || keyHandler.downPressed) {
             // change image every n frames only when button pressed
             spriteTick++;
-            if (spriteTick > 15) {
+            if (spriteTick > 12) {
                 if (spriteNumber == 1) {
                     spriteNumber = 2;
                 } else if (spriteNumber == 2) {

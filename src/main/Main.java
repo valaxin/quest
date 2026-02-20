@@ -24,4 +24,4 @@ public class Main {
         // let the game loop begin ...
         gamePanel.startGameThread();
     }
-}
+    }

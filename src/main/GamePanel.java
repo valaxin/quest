@@ -68,7 +68,6 @@ public class GamePanel extends JPanel implements Runnable {
                 // 3. decrement
                 delta--;
                 drawCounter++;
-
             }
 
             if (timer >= 1000000000) {
