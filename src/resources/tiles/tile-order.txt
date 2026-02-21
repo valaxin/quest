@@ -1,0 +1,9 @@
+0 grass
+1 wall
+2 water
+3 grass-bush
+4 grass-sign
+5 sand
+6 flowers
+7 grass-rock
+

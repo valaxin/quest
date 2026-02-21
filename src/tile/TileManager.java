@@ -16,7 +16,7 @@ public class TileManager {
     public TileManager(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
         tile = new Tile[24]; // array of 24 different tiles
-        mapTileNum = new int[gamePanel.maxScreenCol][gamePanel.maxScreenRow];
+        mapTileNum = new int[gamePanel.maxWorldCol][gamePanel.maxWorldRow];
         getTileImage();
         loadMap();
     }
@@ -31,6 +31,17 @@ public class TileManager {
             tile[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/wall.png")));
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/water.png")));
+            tile[3] = new Tile();
+            tile[3].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/grass-bush.png")));
+            tile[3].collision = true;
+            tile[4] = new Tile();
+            tile[4].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/grass-sign.png")));
+            tile[5] = new Tile();
+            tile[5].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/sand.png")));
+            tile[6] = new Tile();
+            tile[6].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/flowers.png")));
+            tile[7] = new Tile();
+            tile[7].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/grass-rock.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,7 +51,7 @@ public class TileManager {
     public void loadMap() {
         try {
             // importing a txt file, reading the content of the txt file
-            InputStream stream = getClass().getResourceAsStream("/resources/maps/01.txt");
+            InputStream stream = getClass().getResourceAsStream("/resources/maps/world.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(stream)));
 
             // x/y
@@ -48,18 +59,22 @@ public class TileManager {
             int mapRow = 0;
 
             // when in the visible frame
-            while (mapCol < gamePanel.maxScreenCol && mapRow < gamePanel.maxScreenRow) {
+            while (mapCol < gamePanel.maxWorldCol && mapRow < gamePanel.maxWorldRow) {
                 String line = reader.readLine();
                 // when not right
-                while (mapCol < gamePanel.maxScreenCol) {
-                    String[] numbers = line.split(" ");
-                    int x = Integer.parseInt(numbers[mapCol]);
+                while (mapCol < gamePanel.maxWorldCol) {
+
+                    int x = 0;
+                    if (line != null) {
+                        String[] numbers = line.split(" ");
+                        x = Integer.parseInt(numbers[mapCol]);
+                    }
                     mapTileNum[mapCol][mapRow] = x;
                     mapCol++;
                 }
 
                 // when right, go left then down.
-                if (mapCol == gamePanel.maxScreenCol) {
+                if (mapCol == gamePanel.maxWorldCol) {
                     mapCol = 0;
                     mapRow++;
                 }
@@ -69,29 +84,39 @@ public class TileManager {
         }
     }
 
-    public void draw(Graphics g) {
-        int col = 0;
-        int row = 0;
-        int x = 0;
-        int y = 0;
+    public void draw(Graphics graphics) {
+        int worldCol = 0;
+        int worldRow = 0;
 
         // again... when in visible frame
-        while (col < gamePanel.maxScreenCol &&  row < gamePanel.maxScreenRow) {
+        while (worldCol < gamePanel.maxWorldCol &&  worldRow < gamePanel.maxWorldRow) {
 
             // get the tile
-            int tileNum = mapTileNum[col][row];
+            int tileNum = mapTileNum[worldCol][worldRow];
 
-            // draw, with defined num, then increment
-            g.drawImage(tile[tileNum].image, x, y, gamePanel.tileSize, gamePanel.tileSize, null); // 0 needs to be replaced with tileNum, but borked
-            col++;
-            x += gamePanel.tileSize;
+            // player position on map
+            int worldX = worldCol * gamePanel.tileSize;
+            int worldY = worldRow * gamePanel.tileSize;
+            int screenX = worldX - gamePanel.player.worldX + gamePanel.player.screenX;
+            int screenY =  worldY - gamePanel.player.worldY  + gamePanel.player.screenY;
+
+            // only what's visible pls
+            // create boundary for tile paint
+            if (worldX + gamePanel.tileSize > gamePanel.player.worldX - gamePanel.player.screenX &&
+                    worldX - gamePanel.tileSize < gamePanel.player.worldX + gamePanel.player.screenX &&
+                    worldY + gamePanel.tileSize > gamePanel.player.worldY - gamePanel.player.screenY &&
+                    worldY - gamePanel.tileSize < gamePanel.player.worldY + gamePanel.player.screenY) {
+                // draw...
+                graphics.drawImage(tile[tileNum].image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
+            }
+
+            // draw next tile
+            worldCol++;
 
             // when right, reset left and go down.
-            if (col == gamePanel.maxScreenCol) {
-                col = 0;
-                x = 0;
-                row++;
-                y += gamePanel.tileSize;
+            if (worldCol == gamePanel.maxWorldCol) {
+                worldCol = 0;
+                worldRow++;
             }
 
         }
