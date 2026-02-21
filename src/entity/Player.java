@@ -26,6 +26,9 @@ public class Player extends Entity {
         screenX = gp.screenWidth / 2 - (gp.tileSize / 2);
         screenY = gp.screenHeight / 2 - (gp.tileSize / 2);
 
+        // collision
+        solid = new Rectangle(8,16, gp.tileSize - 16, gp.tileSize - 16);
+
         setDefaultValues();
         getPlayerImage();
     }
@@ -64,24 +67,42 @@ public class Player extends Entity {
     // **
     // update called each frame
     public void update () {
+
+        // check player direction
         if (keyHandler.upPressed) {
             direction = "up";
-            worldY -= speed;
         } else  if (keyHandler.downPressed) {
             direction = "down";
-            worldY += speed;
         } else  if (keyHandler.leftPressed) {
             direction = "left";
-            worldX -= speed;
         } else   if (keyHandler.rightPressed) {
             direction = "right";
-            worldX += speed;
         }
 
         if (keyHandler.leftPressed || keyHandler.rightPressed || keyHandler.upPressed || keyHandler.downPressed) {
-            // change image every n frames only when button pressed
+            // the land of do "only when keys are pressed"
+            solidOn = false;
+            gamePanel.collision.checkCollision(this); // player class is sub of entity, therefore...
+            if (!solidOn) {
+                // when false player can move
+                if (direction.equals("up")) {
+                    worldY -= speed;
+                }
+                if (direction.equals("down")) {
+                    worldY += speed;
+                }
+                if (direction.equals("left")) {
+                    worldX -= speed;
+                }
+                if (direction.equals("right")) {
+                    worldX += speed;
+                }
+            }
+
+            // alternate sprites
             spriteTick++;
-            if (spriteTick > 12) {
+            int frameNum = 12;
+            if (spriteTick > frameNum) {
                 if (spriteNumber == 1) {
                     spriteNumber = 2;
                 } else if (spriteNumber == 2) {

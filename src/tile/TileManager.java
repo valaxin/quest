@@ -10,12 +10,12 @@ import java.util.Objects;
 public class TileManager {
 
     GamePanel gamePanel;
-    Tile[] tile;
-    int[][] mapTileNum;
+    public Tile[] tile;
+    public int[][] mapTileNum;
 
     public TileManager(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
-        tile = new Tile[24]; // array of 24 different tiles
+        tile = new Tile[16]; // array of upto 16 different tiles
         mapTileNum = new int[gamePanel.maxWorldCol][gamePanel.maxWorldRow];
         getTileImage();
         loadMap();
@@ -26,22 +26,78 @@ public class TileManager {
     public void getTileImage () {
         try {
             tile[0] = new Tile();
-            tile[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/grass.png")));
+            tile[0].image = ImageIO.read(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream("/resources/tiles/grass.png")
+                    )
+            );
             tile[1] = new Tile();
-            tile[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/wall.png")));
+            tile[1].collision = true;
+            tile[1].image = ImageIO.read(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream("/resources/tiles/wall.png")
+                    )
+            );
             tile[2] = new Tile();
-            tile[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/water.png")));
+            tile[2].collision = true;
+            tile[2].image = ImageIO.read(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream("/resources/tiles/water.png")
+                    )
+            );
             tile[3] = new Tile();
-            tile[3].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/grass-bush.png")));
             tile[3].collision = true;
+            tile[3].image = ImageIO.read(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream("/resources/tiles/grass-bush.png")
+                    )
+            );
             tile[4] = new Tile();
-            tile[4].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/grass-sign.png")));
+            tile[4].collision = true;
+            tile[4].image = ImageIO.read(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream("/resources/tiles/grass-sign.png")
+                    )
+            );
             tile[5] = new Tile();
-            tile[5].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/sand.png")));
+            tile[5].image = ImageIO.read(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream("/resources/tiles/sand.png")
+                    )
+            );
             tile[6] = new Tile();
-            tile[6].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/flowers.png")));
+            tile[6].image = ImageIO.read(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream("/resources/tiles/flowers.png")
+                    )
+            );
             tile[7] = new Tile();
-            tile[7].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/tiles/grass-rock.png")));
+            tile[7].collision = true;
+            tile[7].image = ImageIO.read(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream("/resources/tiles/grass-rock.png")
+                    )
+            );
+            tile[8] = new Tile();
+            tile[8].image = ImageIO.read(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream("/resources/tiles/grass-mushroom.png")
+                    )
+            );
+            tile[9] = new Tile();
+            tile[9].collision = true;
+            tile[9].image = ImageIO.read(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream("/resources/tiles/sand-starfish.png")
+                    )
+            );
+            tile[10] = new Tile();
+            tile[10].collision = true;
+            tile[10].image = ImageIO.read(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream("/resources/tiles/water-lilypad.png")
+                    )
+            );
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,42 +140,46 @@ public class TileManager {
         }
     }
 
+    // draw onto screen
     public void draw(Graphics graphics) {
-        int worldCol = 0;
-        int worldRow = 0;
+        try {
+            int worldCol = 0;
+            int worldRow = 0;
 
-        // again... when in visible frame
-        while (worldCol < gamePanel.maxWorldCol &&  worldRow < gamePanel.maxWorldRow) {
+            // again... when in visible frame
+            while (worldCol < gamePanel.maxWorldCol && worldRow < gamePanel.maxWorldRow) {
 
-            // get the tile
-            int tileNum = mapTileNum[worldCol][worldRow];
+                // get the tile
+                int tileNum = mapTileNum[worldCol][worldRow];
 
-            // player position on map
-            int worldX = worldCol * gamePanel.tileSize;
-            int worldY = worldRow * gamePanel.tileSize;
-            int screenX = worldX - gamePanel.player.worldX + gamePanel.player.screenX;
-            int screenY =  worldY - gamePanel.player.worldY  + gamePanel.player.screenY;
+                // player position on map
+                int worldX = worldCol * gamePanel.tileSize;
+                int worldY = worldRow * gamePanel.tileSize;
+                int screenX = worldX - gamePanel.player.worldX + gamePanel.player.screenX;
+                int screenY = worldY - gamePanel.player.worldY + gamePanel.player.screenY;
 
-            // only what's visible pls
-            // create boundary for tile paint
-            if (worldX + gamePanel.tileSize > gamePanel.player.worldX - gamePanel.player.screenX &&
-                    worldX - gamePanel.tileSize < gamePanel.player.worldX + gamePanel.player.screenX &&
-                    worldY + gamePanel.tileSize > gamePanel.player.worldY - gamePanel.player.screenY &&
-                    worldY - gamePanel.tileSize < gamePanel.player.worldY + gamePanel.player.screenY) {
-                // draw...
-                graphics.drawImage(tile[tileNum].image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
+                // only what's visible pls
+                // create boundary for tile paint
+                if (worldX + gamePanel.tileSize > gamePanel.player.worldX - gamePanel.player.screenX &&
+                        worldX - gamePanel.tileSize < gamePanel.player.worldX + gamePanel.player.screenX &&
+                        worldY + gamePanel.tileSize > gamePanel.player.worldY - gamePanel.player.screenY &&
+                        worldY - gamePanel.tileSize < gamePanel.player.worldY + gamePanel.player.screenY) {
+                    // draw...
+                    graphics.drawImage(tile[tileNum].image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
+                }
+
+                // draw next tile
+                worldCol++;
+
+                // when right, reset left and go down.
+                if (worldCol == gamePanel.maxWorldCol) {
+                    worldCol = 0;
+                    worldRow++;
+                }
+
             }
-
-            // draw next tile
-            worldCol++;
-
-            // when right, reset left and go down.
-            if (worldCol == gamePanel.maxWorldCol) {
-                worldCol = 0;
-                worldRow++;
-            }
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 }
