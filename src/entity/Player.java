@@ -59,6 +59,7 @@ public class Player extends Entity {
             // RIGHT (Moving right)
             right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/sprites/saturn/right1.png")));
             right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/sprites/saturn/right2.png")));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,7 +79,7 @@ public class Player extends Entity {
         } else   if (keyHandler.rightPressed) {
             direction = "right";
         }
-
+        //
         if (keyHandler.leftPressed || keyHandler.rightPressed || keyHandler.upPressed || keyHandler.downPressed) {
             // the land of do "only when keys are pressed"
             solidOn = false;

@@ -117,9 +117,8 @@ public class TileManager {
             // when in the visible frame
             while (mapCol < gamePanel.maxWorldCol && mapRow < gamePanel.maxWorldRow) {
                 String line = reader.readLine();
-                // when not right
+                // when not right, drop
                 while (mapCol < gamePanel.maxWorldCol) {
-
                     int x = 0;
                     if (line != null) {
                         String[] numbers = line.split(" ");
