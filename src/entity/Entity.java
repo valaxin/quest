@@ -16,6 +16,10 @@ public class Entity {
     public int spriteNumber = 1;
 
     public Rectangle solid = new Rectangle(0,0,0,0);
+    public int solidAreaDefaultX = 0;
+    public int solidAreaDefaultY = 0;
     public boolean solidOn = false;
+
+
 
 }

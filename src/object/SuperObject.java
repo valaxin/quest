@@ -10,6 +10,9 @@ public class SuperObject {
     public String name;
     public Boolean collision = false;
     public int worldX, worldY;
+    public Rectangle solid = new Rectangle(0,0,48,48);
+    public int solidAreaDefaultX;
+    public int solidAreaDefaultY;
 
     public void draw(Graphics graphics, GamePanel gamePanel) {
 

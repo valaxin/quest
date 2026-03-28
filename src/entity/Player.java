@@ -17,7 +17,7 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
 
-    // -- define player with exceptions
+    // define player with exceptions
     public Player(GamePanel gp, KeyHandler kh) {
         this.gamePanel = gp;
         this.keyHandler = kh;
@@ -28,6 +28,8 @@ public class Player extends Entity {
 
         // collision
         solid = new Rectangle(8,16, gp.tileSize - 16, gp.tileSize - 16);
+        solidAreaDefaultX = solid.x;
+        solidAreaDefaultY = solid.y;
 
         setDefaultValues();
         getPlayerImage();
@@ -65,7 +67,6 @@ public class Player extends Entity {
         }
     }
 
-    // **
     // update called each frame
     public void update () {
 
@@ -83,7 +84,12 @@ public class Player extends Entity {
         if (keyHandler.leftPressed || keyHandler.rightPressed || keyHandler.upPressed || keyHandler.downPressed) {
             // the land of do "only when keys are pressed"
             solidOn = false;
-            gamePanel.collision.checkCollision(this); // player class is sub of entity, therefore...
+            // check tile collision
+            gamePanel.collision.checkCollision(this); // player class is sub of entity, therefore..
+
+            // check object collision
+            int objIndex = gamePanel.collision.checkObject(this, true);
+
             if (!solidOn) {
                 // when false player can move
                 if (direction.equals("up")) {
